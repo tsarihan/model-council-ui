@@ -74,6 +74,7 @@ All model-council env vars (`OLLAMA_ADDRESS`, `REQUEST_TIMEOUT_MS`, …) pass th
 - Uploaded files are written to a temp directory and passed to the MCP server as local paths (same trust model as the plugin's `files`/`images` parameters).
 - `full_repo_access` is intentionally not exposed in the UI; use the Claude Code plugin for repo-wide reviews.
 - Background jobs live in the MCP server's memory — restarting the UI server drops running jobs.
+- **Versioning tracks the plugin.** This repo's version matches the `model-council-mcp` release it is built against, so a UI and a server that share a number are known to fit. Features here often depend on server-side fields (`reasoning_effort`, the per-response `phase` tag), and `ask_council`'s schema is strict — an older server rejects a call carrying a parameter it doesn't know, so the pairing is a real compatibility signal rather than decoration.
 
 ## License
 
