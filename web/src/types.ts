@@ -15,6 +15,24 @@ export const MODES: { id: ResponseMode; name: string; hint: string }[] = [
   { id: 'dialectic', name: 'Dialectic', hint: 'Defend, argue pros and cons, then re-select a ranked top 3' },
 ];
 
+/**
+ * How hard every member AND the judge think. `null` is a real option, not an
+ * absence: it means "send nothing", leaving each model at its own default —
+ * which is not the same as any one level and must stay selectable.
+ */
+export type ReasoningEffort =
+  | 'none' | 'minimal' | 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+
+export const EFFORTS: { id: ReasoningEffort; name: string; hint: string }[] = [
+  { id: 'none', name: 'None', hint: 'No reasoning pass at all — fastest, cheapest' },
+  { id: 'minimal', name: 'Minimal', hint: 'Barely think; for simple lookups' },
+  { id: 'low', name: 'Low', hint: 'A little reasoning' },
+  { id: 'medium', name: 'Medium', hint: 'Balanced depth and cost' },
+  { id: 'high', name: 'High', hint: 'Deeper reasoning; noticeably slower' },
+  { id: 'xhigh', name: 'Extra high', hint: 'Very deep; heavy on time and quota' },
+  { id: 'max', name: 'Max', hint: 'Maximum depth — slowest and most expensive' },
+];
+
 export interface RawResponse {
   label: string;
   response: string;
@@ -121,6 +139,8 @@ export interface ConfigPayload {
     judgeModel: string;
     responseMode: ResponseMode;
     maxDeconflictRounds: number;
+    /** null = unset, i.e. each model runs at its own default depth. */
+    reasoningEffort: ReasoningEffort | null;
   };
   providers: { id: string; type: string; label: string; baseUrl: string; hasApiKey: boolean }[];
   runtime: {
@@ -156,6 +176,8 @@ export interface AskOptions {
   verbose: boolean;
   background: boolean;
   context?: string;
+  /** Undefined = don't send one, so the council's configured default applies. */
+  effort?: ReasoningEffort;
 }
 
 export interface UserMessage {

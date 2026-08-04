@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../lib/api';
 import { memberIdentity, providerDisplayName } from '../lib/members';
-import { MODES, type ConfigPayload, type ModelEntry, type ResponseMode, type StatusPayload } from '../types';
+import { EFFORTS, MODES, type ConfigPayload, type ModelEntry, type ReasoningEffort, type ResponseMode, type StatusPayload } from '../types';
 
 const TIER_OPTIONS: Record<string, string[]> = {
   claude: ['free', 'pro', 'max5x', 'max20x'],
@@ -21,6 +21,10 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
   const [judge, setJudge] = useState('auto');
   const [mode, setMode] = useState<ResponseMode>('categorized');
   const [rounds, setRounds] = useState(3);
+  // '' is the "each model's own default" choice — saved as the "auto" sentinel,
+  // which is NOT the same as the 'none' level (that actively asks for zero
+  // reasoning). Keeping them distinct is why this can't just be a plain level.
+  const [effort, setEffort] = useState<ReasoningEffort | ''>('');
   const [runTimeoutS, setRunTimeoutS] = useState(300);
   const [tiers, setTiers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
@@ -32,6 +36,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
     setJudge(config.council.judgeModel.startsWith('auto') ? 'auto' : config.council.judgeModel);
     setMode(config.council.responseMode);
     setRounds(config.council.maxDeconflictRounds);
+    setEffort(config.council.reasoningEffort ?? '');
   }, [config]);
   useEffect(() => {
     if (!status) return;
@@ -128,6 +133,18 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
           </label>
           <p className="panel-hint">{MODES.find((m) => m.id === mode)?.hint}</p>
           <label className="field">
+            Default reasoning effort
+            <select value={effort} onChange={(e) => setEffort(e.target.value as ReasoningEffort | '')}>
+              <option value="">auto (each model's own default)</option>
+              {EFFORTS.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+          </label>
+          <p className="panel-hint">
+            {effort
+              ? `${EFFORTS.find((e) => e.id === effort)?.hint}. Applies to every member and the judge; a level a backend can't take is clamped to its nearest.`
+              : "No effort is sent — every member and the judge run at their own default depth."}
+          </p>
+          <label className="field">
             Max deconfliction rounds
             <input
               type="number" min={1} max={10} value={rounds}
@@ -139,6 +156,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
             disabled={saving !== null}
             onClick={() => run('deliberation', () => api.saveConfig({
               judge_model: judge, response_mode: mode, max_deconflict_rounds: rounds,
+              reasoning_effort: effort || 'auto',
             }))}
           >{saving === 'deliberation' ? 'Saving…' : 'Save deliberation'}</button>
         </section>

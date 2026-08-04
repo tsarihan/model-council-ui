@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react';
 import { api } from '../lib/api';
-import { MODES, type AskOptions, type Attachment, type ResponseMode } from '../types';
+import { EFFORTS, MODES, type AskOptions, type Attachment, type ReasoningEffort, type ResponseMode } from '../types';
 
-export function Composer({ defaultMode, disabled, onAsk }: {
+export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
   defaultMode: ResponseMode;
+  /** The council's configured effort, or null when it runs at each model's own default. */
+  defaultEffort: ReasoningEffort | null;
   disabled: boolean;
   onAsk: (question: string, attachments: Attachment[], opts: AskOptions) => void;
 }) {
@@ -13,6 +15,10 @@ export function Composer({ defaultMode, disabled, onAsk }: {
   const [verbose, setVerbose] = useState(false);
   const [background, setBackground] = useState(false);
   const [context, setContext] = useState('');
+  // null means "follow the council default" — distinct from a chosen level, so
+  // the picker can offer the default explicitly rather than pretending the
+  // configured value was picked here.
+  const [effort, setEffort] = useState<ReasoningEffort | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -26,6 +32,7 @@ export function Composer({ defaultMode, disabled, onAsk }: {
     onAsk(q, attachments, {
       mode: effectiveMode, verbose, background,
       context: context.trim() || undefined,
+      effort: effort ?? undefined,
     });
     setQuestion('');
     setAttachments([]);
@@ -68,7 +75,7 @@ export function Composer({ defaultMode, disabled, onAsk }: {
           aria-expanded={optionsOpen}
           onClick={() => setOptionsOpen((v) => !v)}
         >
-          Options {verbose || background || context ? '·' : ''}
+          Options {verbose || background || context || effort ? '·' : ''}
         </button>
       </div>
 
@@ -81,6 +88,22 @@ export function Composer({ defaultMode, disabled, onAsk }: {
           <label className="opt">
             <input type="checkbox" checked={background} onChange={(e) => setBackground(e.target.checked)} />
             Run in background — get a job you can keep working past
+          </label>
+          <label className="opt opt-block">
+            Reasoning effort — how hard every member and the judge think
+            <select
+              value={effort ?? ''}
+              onChange={(e) => setEffort((e.target.value || null) as ReasoningEffort | null)}
+            >
+              <option value="">
+                {defaultEffort
+                  ? `Council default (${defaultEffort})`
+                  : "Council default (each model's own)"}
+              </option>
+              {EFFORTS.map((e) => (
+                <option key={e.id} value={e.id}>{e.name} — {e.hint}</option>
+              ))}
+            </select>
           </label>
           <label className="opt opt-block">
             Extra context sent to every member

@@ -125,6 +125,10 @@ export default function App() {
       verbose: opts.verbose,
     };
     if (opts.context?.trim()) args.context = opts.context.trim();
+    // Only sent when the composer actually picked a level — omitting it lets
+    // the council's own configured default apply, which is not the same as any
+    // particular level.
+    if (opts.effort) args.reasoning_effort = opts.effort;
     const files = attachments.filter((a) => a.kind === 'file').map((a) => a.path);
     const images = attachments.filter((a) => a.kind === 'image').map((a) => a.path);
     if (files.length) args.files = files;
@@ -192,6 +196,7 @@ export default function App() {
         } />
         <Composer
           defaultMode={config?.council.responseMode ?? 'categorized'}
+          defaultEffort={config?.council.reasoningEffort ?? null}
           disabled={!!backendError}
           onAsk={ask}
         />

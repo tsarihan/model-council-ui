@@ -194,6 +194,10 @@ input, select, textarea { font: inherit; color: inherit; }
   border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
   background: var(--paper); resize: vertical; margin-top: 4px;
 }
+.opt-block select {
+  border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px;
+  background: var(--paper); margin-top: 4px;
+}
 .attach-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .attach-chip {
   display: inline-flex; align-items: center; gap: 5px;

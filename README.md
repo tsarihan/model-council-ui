@@ -6,7 +6,8 @@ A local web UI for [model-council-mcp](https://github.com/tsarihan/model-council
 - **Pick your deliberation mode per question** — Individual, Categorized, Deconflicted (with a live score dial), Pooled (Delphi), or Dialectic (thesis → antithesis → synthesis) — each rendered with its own structured view, not a wall of text.
 - **The bench** — every council member gets a seat; seats light up live as each model answers.
 - **Documents in, documents out** — attach text files or images (vision-capable members are auto-routed); export any result as Markdown, copy it, or print it to PDF from the Document tab.
-- **Full council control** — members grouped by provider, judge model, default mode, deconfliction rounds, per-answer timeouts, and subscription tiers, all editable in the Council panel.
+- **Dial the reasoning depth** — set how hard every member and the judge think (`none` … `max`), per question in the composer's Options or as a council-wide default in the Council panel. A level a given backend can't take is clamped to its nearest supported one, so one setting works across a mixed council.
+- **Full council control** — members grouped by provider, judge model, default mode, default reasoning effort, deconfliction rounds, per-answer timeouts, and subscription tiers, all editable in the Council panel.
 - **Background runs** — long deconfliction runs can run as background jobs; the UI polls and fills in the answer when it's done, even after a page reload.
 
 ## How it works

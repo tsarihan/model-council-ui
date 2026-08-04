@@ -15,6 +15,8 @@ export const api = {
 
   saveConfig: (body: {
     models?: string[]; judge_model?: string; response_mode?: string; max_deconflict_rounds?: number;
+    /** A level, or 'auto' to clear it back to each model's own default. */
+    reasoning_effort?: string;
   }) => fetch('/api/config', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   }).then((r) => json<unknown>(r)),
