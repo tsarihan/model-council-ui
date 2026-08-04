@@ -33,11 +33,22 @@ export const EFFORTS: { id: ReasoningEffort; name: string; hint: string }[] = [
   { id: 'max', name: 'Max', hint: 'Maximum depth — slowest and most expensive' },
 ];
 
+/** Which deliberation round produced an answer (mirrors the server's ResponsePhase). */
+export type ResponsePhase =
+  | 'thesis'        // round 0: each member's initial, independent answer
+  | 'antithesis'    // dialectic: defend your pick, critique the alternatives
+  | 'synthesis'     // dialectic: final ranked re-selection
+  | 'reconsidered'  // pooled: fresh answer after seeing the neutral pool
+  | 'deconflict';   // deconflicted: a re-question aimed at the open conflicts
+
 export interface RawResponse {
   label: string;
   response: string;
   error?: string;
   latencyMs: number;
+  phase?: ResponsePhase;
+  /** 1-based deconfliction round; only set when phase is 'deconflict'. */
+  round?: number;
 }
 
 export interface VisionRouting {
