@@ -76,4 +76,4 @@ All model-council env vars (`OLLAMA_ADDRESS`, `REQUEST_TIMEOUT_MS`, …) pass th
 
 ## License
 
-Apache-2.0 — same as model-council-mcp.
+Apache License 2.0 — Copyright (c) 2026 Tom Sarihan (Desnet AI LLC). See [LICENSE](LICENSE) and [NOTICE](NOTICE). Same license as model-council-mcp.
