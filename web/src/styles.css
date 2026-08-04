@@ -412,3 +412,16 @@ h4.agree { color: var(--verdigris-deep); }
   .msg.council .bubble { border: none; padding: 0; }
   body { background: #fff; }
 }
+
+/* Round tag on a response card — which deliberation phase produced this answer. */
+.pill.phase {
+  background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft);
+  font-size: 11px; letter-spacing: 0.02em; text-transform: lowercase;
+}
+.pill.phase.thesis { border-color: var(--line); }
+.pill.phase.antithesis { border-color: #c9a227; color: #8a6d0b; }
+.pill.phase.synthesis { border-color: #2f8f5b; color: #1f6b42; }
+@media (prefers-color-scheme: dark) {
+  .pill.phase.antithesis { color: #e0c25c; }
+  .pill.phase.synthesis { color: #6fc79a; }
+}

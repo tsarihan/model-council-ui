@@ -196,6 +196,8 @@ export interface UserMessage {
   question: string;
   attachments: Attachment[];
   mode: ResponseMode;
+  /** Effort explicitly requested for this ask; absent means the council default applied. */
+  effort?: ReasoningEffort;
   at: number;
 }
 

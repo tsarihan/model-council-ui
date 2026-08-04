@@ -23,7 +23,9 @@ function UserBubble({ msg }: { msg: UserMessage }) {
             ))}
           </div>
         )}
-        <span className="bubble-meta">{msg.mode}</span>
+        <span className="bubble-meta">
+          {msg.mode}{msg.effort ? ` · effort: ${msg.effort}` : ''}
+        </span>
       </div>
     </div>
   );

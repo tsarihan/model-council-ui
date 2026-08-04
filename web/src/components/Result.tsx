@@ -25,6 +25,14 @@ function ResponseCards({ list, openFirst }: { list: RawResponse[]; openFirst?: b
         <details key={`${r.label}-${i}`} className="response-card" open={openFirst && i === 0}>
           <summary>
             <MemberTag label={r.label} />
+            {/* Read from the record, not from the enclosing section's heading:
+                in dialectic a member answers three times, and the tag is what
+                makes each card self-describing wherever it is rendered. */}
+            {r.phase && (
+              <span className={`pill phase ${r.phase}`}>
+                {r.phase}{r.phase === 'deconflict' && r.round ? ` ${r.round}` : ''}
+              </span>
+            )}
             <span className="latency">{fmt(r.latencyMs)}</span>
             {r.error && <span className="pill warn">failed</span>}
           </summary>

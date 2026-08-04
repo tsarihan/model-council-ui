@@ -92,7 +92,7 @@ export default function App() {
     let convoId = activeId;
 
     const userMsg: ChatMessage = {
-      role: 'user', question, attachments, mode: opts.mode, at: Date.now(),
+      role: 'user', question, attachments, mode: opts.mode, effort: opts.effort, at: Date.now(),
     };
     const councilMsg: CouncilMessage = {
       role: 'council', status: 'running', startedAt: Date.now(), members,
