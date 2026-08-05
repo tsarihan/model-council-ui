@@ -2,12 +2,14 @@ import { useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { EFFORTS, MODES, type AskOptions, type Attachment, type ReasoningEffort, type ResponseMode } from '../types';
 
-export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disabled, onAsk }: {
+export function Composer({ defaultMode, defaultEffort, defaultWebAccess, members, disabled, onAsk }: {
   defaultMode: ResponseMode;
   /** The council's configured effort, or null when it runs at each model's own default. */
   defaultEffort: ReasoningEffort | null;
   /** The council's configured web-access default, shown so the toggle isn't a mystery. */
   defaultWebAccess: boolean;
+  /** Current council members, for per-member effort pins. */
+  members: string[];
   disabled: boolean;
   onAsk: (question: string, attachments: Attachment[], opts: AskOptions) => void;
 }) {
@@ -24,6 +26,8 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
   // null = follow the council default; true/false is an explicit override.
   const [webAccess, setWebAccess] = useState<boolean | null>(null);
   const [noCache, setNoCache] = useState(false);
+  // Per-member pins: '' = follow the call/default level. Strongest effort tier.
+  const [memberEfforts, setMemberEfforts] = useState<Record<string, ReasoningEffort | ''>>({});
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -40,6 +44,9 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
       effort: effort ?? undefined,
       webAccess: webAccess ?? undefined,
       noCache: noCache || undefined,
+      memberEfforts: Object.fromEntries(
+        Object.entries(memberEfforts).filter(([, v]) => v),
+      ) as Record<string, ReasoningEffort> | undefined,
     });
     setQuestion('');
     setAttachments([]);
@@ -82,7 +89,7 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
           aria-expanded={optionsOpen}
           onClick={() => setOptionsOpen((v) => !v)}
         >
-          Options {verbose || background || context || effort || webAccess !== null || noCache ? '·' : ''}
+          Options {verbose || background || context || effort || webAccess !== null || noCache || Object.values(memberEfforts).some(Boolean) ? '·' : ''}
         </button>
       </div>
 
@@ -125,6 +132,23 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
               ))}
             </select>
           </label>
+          {members.length > 0 && (
+            <div className="opt opt-block">
+              Per-member effort pins — override the levels above for one model
+              {members.map((m) => (
+                <label key={m} className="member-pin">
+                  <span className="member-pin-label" title={m}>{m.split(':').slice(-2).join(':')}</span>
+                  <select
+                    value={memberEfforts[m] ?? ''}
+                    onChange={(e) => setMemberEfforts((prev) => ({ ...prev, [m]: e.target.value as ReasoningEffort | '' }))}
+                  >
+                    <option value="">follow</option>
+                    {EFFORTS.map((ef) => <option key={ef.id} value={ef.id}>{ef.name}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          )}
           <label className="opt opt-block">
             Extra context sent to every member
             <textarea

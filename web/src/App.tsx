@@ -132,6 +132,7 @@ export default function App() {
     // Explicit false must reach the server so it can turn OFF a configured default.
     if (opts.webAccess !== undefined) args.web_access = opts.webAccess;
     if (opts.noCache) args.no_cache = true;
+    if (opts.memberEfforts && Object.keys(opts.memberEfforts).length) args.member_efforts = opts.memberEfforts;
     const files = attachments.filter((a) => a.kind === 'file').map((a) => a.path);
     const images = attachments.filter((a) => a.kind === 'image').map((a) => a.path);
     if (files.length) args.files = files;
@@ -201,6 +202,7 @@ export default function App() {
           defaultMode={config?.council.responseMode ?? 'categorized'}
           defaultEffort={config?.council.reasoningEffort ?? null}
           defaultWebAccess={config?.council.webAccess ?? false}
+          members={config?.council.members ?? []}
           disabled={!!backendError}
           onAsk={ask}
         />

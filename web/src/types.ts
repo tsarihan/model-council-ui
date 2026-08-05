@@ -215,6 +215,8 @@ export interface AskOptions {
   webAccess?: boolean;
   /** Skip the server's 15-minute repeat-ask cache and force a fresh run. */
   noCache?: boolean;
+  /** Per-member effort pins for this call — strongest tier: per-model ▸ per-call ▸ default. */
+  memberEfforts?: Record<string, ReasoningEffort>;
 }
 
 export interface UserMessage {
