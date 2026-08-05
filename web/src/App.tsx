@@ -133,6 +133,8 @@ export default function App() {
     if (opts.webAccess !== undefined) args.web_access = opts.webAccess;
     if (opts.noCache) args.no_cache = true;
     if (opts.memberEfforts && Object.keys(opts.memberEfforts).length) args.member_efforts = opts.memberEfforts;
+    if (opts.outputFile) args.output_file = opts.outputFile;
+    if (opts.memberFileOutput !== undefined) args.member_file_output = opts.memberFileOutput;
     const files = attachments.filter((a) => a.kind === 'file').map((a) => a.path);
     const images = attachments.filter((a) => a.kind === 'image').map((a) => a.path);
     if (files.length) args.files = files;

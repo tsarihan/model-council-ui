@@ -26,6 +26,8 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, members
   // null = follow the council default; true/false is an explicit override.
   const [webAccess, setWebAccess] = useState<boolean | null>(null);
   const [noCache, setNoCache] = useState(false);
+  const [outputFile, setOutputFile] = useState('');
+  const [memberFileOutput, setMemberFileOutput] = useState<'auto' | 'on' | 'off'>('auto');
   // Per-member pins: '' = follow the call/default level. Strongest effort tier.
   const [memberEfforts, setMemberEfforts] = useState<Record<string, ReasoningEffort | ''>>({});
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -44,6 +46,8 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, members
       effort: effort ?? undefined,
       webAccess: webAccess ?? undefined,
       noCache: noCache || undefined,
+      outputFile: outputFile.trim() || undefined,
+      memberFileOutput: memberFileOutput === 'auto' ? undefined : memberFileOutput === 'on',
       memberEfforts: Object.fromEntries(
         Object.entries(memberEfforts).filter(([, v]) => v),
       ) as Record<string, ReasoningEffort> | undefined,
@@ -89,7 +93,7 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, members
           aria-expanded={optionsOpen}
           onClick={() => setOptionsOpen((v) => !v)}
         >
-          Options {verbose || background || context || effort || webAccess !== null || noCache || Object.values(memberEfforts).some(Boolean) ? '·' : ''}
+          Options {verbose || background || context || effort || webAccess !== null || noCache || outputFile.trim() || memberFileOutput !== 'auto' || Object.values(memberEfforts).some(Boolean) ? '·' : ''}
         </button>
       </div>
 
@@ -115,6 +119,23 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, members
           <label className="opt">
             <input type="checkbox" checked={noCache} onChange={(e) => setNoCache(e.target.checked)} />
             Force fresh run — skip the 15-minute repeat-ask cache
+          </label>
+          <label className="opt opt-block">
+            Save report to file — the server writes the full result (absolute .md/.txt/.json path)
+            <input
+              type="text"
+              placeholder="/absolute/path/report.md"
+              value={outputFile}
+              onChange={(e) => setOutputFile(e.target.value)}
+            />
+          </label>
+          <label className="opt opt-block">
+            Member files — members write long findings to private scratch dirs (collected + inlined into saved reports)
+            <select value={memberFileOutput} onChange={(e) => setMemberFileOutput(e.target.value as 'auto' | 'on' | 'off')}>
+              <option value="auto">Auto — on for repo/web asks</option>
+              <option value="on">On</option>
+              <option value="off">Off</option>
+            </select>
           </label>
           <label className="opt opt-block">
             Reasoning effort — how hard every member and the judge think

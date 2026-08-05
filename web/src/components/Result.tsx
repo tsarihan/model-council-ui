@@ -301,6 +301,23 @@ export function Result({ result, question, askedAt, elapsedMs }: {
               {result.usage.byMember[0] ? ` · slowest ${result.usage.byMember[0].label} ${fmt(result.usage.byMember[0].totalMs)}` : ''}
             </p>
           )}
+          {'outputFile' in result && result.outputFile && (
+            <p className="usage-line">
+              {result.outputFile.error
+                ? `Report NOT saved: ${result.outputFile.error}`
+                : `Report saved: ${result.outputFile.path} (${Math.round((result.outputFile.bytes ?? 0) / 1024)} KB)`}
+            </p>
+          )}
+          {'memberFiles' in result && result.memberFiles && result.memberFiles.files.length > 0 && (
+            <details className="raw-details">
+              <summary>Member files ({result.memberFiles.files.length})</summary>
+              <ul className="sources">
+                {result.memberFiles.files.map((f) => (
+                  <li key={f.path}>{f.member}: {f.path} ({Math.round(f.bytes / 1024) || 1} KB)</li>
+                ))}
+              </ul>
+            </details>
+          )}
           {body}
           {'webRouting' in result && result.webRouting?.sources && result.webRouting.sources.length > 0 && (
             <details className="raw-details">

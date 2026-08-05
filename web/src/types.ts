@@ -90,6 +90,10 @@ interface ResultBase {
   question?: string;
   webRouting?: WebRouting;
   usage?: UsageReport;
+  /** Server-written report receipt (ask's outputFile), or the write error. */
+  outputFile?: { path: string; bytes?: number; format?: string; error?: string };
+  /** Files members wrote to their private scratch dirs during the run. */
+  memberFiles?: { root: string; files: { member: string; path: string; bytes: number }[] };
   judgeIsMember?: boolean;
   /** Served from the repeat-ask cache; ageMs = how stale. */
   cache?: { hit: true; ageMs: number };
@@ -219,6 +223,10 @@ export interface AskOptions {
   noCache?: boolean;
   /** Per-member effort pins for this call — strongest tier: per-model ▸ per-call ▸ default. */
   memberEfforts?: Record<string, ReasoningEffort>;
+  /** Absolute path the SERVER writes the full result to after the run (.md/.txt/.json). */
+  outputFile?: string;
+  /** Member scratch writing: undefined = auto (on for repo/web asks), true/false forces it. */
+  memberFileOutput?: boolean;
 }
 
 export interface UserMessage {
