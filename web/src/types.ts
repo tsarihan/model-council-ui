@@ -62,6 +62,8 @@ export interface ConflictPosition { models: string[]; position: string }
 export interface ConflictItem {
   id: string; topic: string; positions: ConflictPosition[];
   resolved?: boolean; resolution?: string;
+  /** Judge's read on which position is better supported — present only when the sides differ in cited backing. */
+  assessment?: string;
 }
 export interface RoundSummary {
   round: number; conflictsEntering: number; conflictsResolved: number; conflictsRemaining: number;
@@ -70,8 +72,25 @@ export interface PooledOption { answer: string; rationale: string; models: strin
 export interface PooledDigest { options: PooledOption[]; judgeDegraded?: boolean }
 export interface DialecticOption { answer: string; pros: string[]; cons: string[]; championedBy: string[] }
 
+export interface WebRouting {
+  researched: string[];
+  fromMemory: { label: string; reason: string }[];
+  routedViaHarness?: string[];
+  toolDialectWarnings?: { label: string; risk: string }[];
+  sources?: { url: string; citedBy: string[] }[];
+}
+
+export interface UsageReport {
+  completions: number;
+  totalLatencyMs: number;
+  byMember: { label: string; calls: number; totalMs: number }[];
+}
+
 interface ResultBase {
   question?: string;
+  webRouting?: WebRouting;
+  usage?: UsageReport;
+  judgeIsMember?: boolean;
   visionRouting?: VisionRouting;
   timedOutMembers?: string[];
   timeoutNotice?: string;

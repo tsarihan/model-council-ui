@@ -425,3 +425,9 @@ h4.agree { color: var(--verdigris-deep); }
   .pill.phase.antithesis { color: #e0c25c; }
   .pill.phase.synthesis { color: #6fc79a; }
 }
+
+/* Judge's evidence-weighing on a conflict, and the consolidated source list. */
+.assessment { font-size: 13px; color: var(--amber); margin: 6px 0 0; }
+.sources { margin: 8px 0 0; padding-left: 18px; font-size: 13px; }
+.sources a { color: var(--verdigris); word-break: break-all; }
+.cite-count { color: var(--ink-faint); }

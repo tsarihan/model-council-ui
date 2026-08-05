@@ -59,6 +59,7 @@ function Conflicts({ items, title }: { items: ConflictItem[]; title: string }) {
               <p>{p.position}</p>
             </div>
           ))}
+          {c.assessment && <p className="assessment">Judge's read: {c.assessment}</p>}
           {c.resolution && <p className="resolution">Resolved: {c.resolution}</p>}
         </div>
       ))}
@@ -254,7 +255,11 @@ export function Result({ result, question, askedAt, elapsedMs }: {
     <div className="result">
       <div className="result-toolbar">
         <span className="result-mode">{('mode' in result && result.mode) || 'answer'}</span>
-        {'judgeModel' in result && result.judgeModel && <span className="result-judge">judge: {result.judgeModel}</span>}
+        {'judgeModel' in result && result.judgeModel && (
+          <span className="result-judge">
+            judge: {result.judgeModel}{result.judgeIsMember ? ' (also a member)' : ''}
+          </span>
+        )}
         {elapsedMs != null && <span className="result-elapsed">{fmt(elapsedMs)}</span>}
         <span className="spacer" />
         <div className="tabs" role="tablist">
@@ -282,7 +287,24 @@ export function Result({ result, question, askedAt, elapsedMs }: {
 
       {warnings.map((w, i) => <p key={i} className="banner warn">{w}</p>)}
 
-      {tab === 'result' && <div className="result-body">{body}</div>}
+      {tab === 'result' && (
+        <div className="result-body">
+          {body}
+          {'webRouting' in result && result.webRouting?.sources && result.webRouting.sources.length > 0 && (
+            <details className="raw-details">
+              <summary>Sources cited ({result.webRouting.sources.length})</summary>
+              <ul className="sources">
+                {result.webRouting.sources.map((s) => (
+                  <li key={s.url}>
+                    <a href={s.url} target="_blank" rel="noreferrer">{s.url}</a>
+                    <span className="cite-count"> · cited by {s.citedBy.length}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      )}
       {tab === 'document' && (
         <div className="document">
           <Markdown text={report} className="document-md" />
