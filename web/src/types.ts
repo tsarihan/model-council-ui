@@ -91,6 +91,8 @@ interface ResultBase {
   webRouting?: WebRouting;
   usage?: UsageReport;
   judgeIsMember?: boolean;
+  /** Served from the repeat-ask cache; ageMs = how stale. */
+  cache?: { hit: true; ageMs: number };
   visionRouting?: VisionRouting;
   timedOutMembers?: string[];
   timeoutNotice?: string;

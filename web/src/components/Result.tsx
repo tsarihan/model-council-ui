@@ -261,6 +261,11 @@ export function Result({ result, question, askedAt, elapsedMs }: {
           </span>
         )}
         {elapsedMs != null && <span className="result-elapsed">{fmt(elapsedMs)}</span>}
+        {'cache' in result && result.cache?.hit && (
+          <span className="pill cache" title="Identical ask within 15 min — served from cache; use no_cache to force fresh">
+            cached · {fmt(result.cache.ageMs)} old
+          </span>
+        )}
         <span className="spacer" />
         <div className="tabs" role="tablist">
           {(['result', 'document', 'json'] as const).map((t) => (

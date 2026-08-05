@@ -431,3 +431,5 @@ h4.agree { color: var(--verdigris-deep); }
 .sources { margin: 8px 0 0; padding-left: 18px; font-size: 13px; }
 .sources a { color: var(--verdigris); word-break: break-all; }
 .cite-count { color: var(--ink-faint); }
+
+.pill.cache { background: var(--agree-bg); border: 1px solid var(--line); color: var(--verdigris-deep); font-size: 11px; }
