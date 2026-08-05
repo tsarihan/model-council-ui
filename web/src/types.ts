@@ -180,6 +180,8 @@ export interface ConfigPayload {
     requestTimeoutMs: number;
     repoRequestTimeoutMs: number;
     verbose: boolean;
+    /** Parallel tool executions inside one claude-cli member call; null = unset (server seeds 16). */
+    harnessToolConcurrency?: number | null;
     [k: string]: unknown;
   };
 }

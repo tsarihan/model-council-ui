@@ -25,6 +25,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
   // which is NOT the same as the 'none' level (that actively asks for zero
   // reasoning). Keeping them distinct is why this can't just be a plain level.
   const [effort, setEffort] = useState<ReasoningEffort | ''>('');
+  const [toolConc, setToolConc] = useState<number>(16);
   const [runTimeoutS, setRunTimeoutS] = useState(300);
   const [tiers, setTiers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
@@ -37,6 +38,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
     setMode(config.council.responseMode);
     setRounds(config.council.maxDeconflictRounds);
     setEffort(config.council.reasoningEffort ?? '');
+    if (typeof config.runtime.harnessToolConcurrency === 'number') setToolConc(config.runtime.harnessToolConcurrency);
   }, [config]);
   useEffect(() => {
     if (!status) return;
@@ -151,12 +153,24 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
               onChange={(e) => setRounds(Number(e.target.value))}
             />
           </label>
+          <label className="field">
+            Harness tool concurrency
+            <input
+              type="number" min={1} max={64} value={toolConc}
+              onChange={(e) => setToolConc(Number(e.target.value))}
+            />
+          </label>
+          <p className="panel-hint">
+            Parallel tool executions inside one Claude-CLI member (web fetches, repo reads). Overrides
+            any throttle the member would inherit from your own session; seeded to 16 on install.
+          </p>
           <button
             className="btn-primary"
             disabled={saving !== null}
             onClick={() => run('deliberation', () => api.saveConfig({
               judge_model: judge, response_mode: mode, max_deconflict_rounds: rounds,
               reasoning_effort: effort || 'auto',
+              ...(Number.isFinite(toolConc) && toolConc >= 1 ? { harness_tool_concurrency: Math.min(64, Math.floor(toolConc)) } : {}),
             }))}
           >{saving === 'deliberation' ? 'Saving…' : 'Save deliberation'}</button>
         </section>

@@ -17,6 +17,8 @@ export const api = {
     models?: string[]; judge_model?: string; response_mode?: string; max_deconflict_rounds?: number;
     /** A level, or 'auto' to clear it back to each model's own default. */
     reasoning_effort?: string;
+    /** Parallel tool executions inside one claude-cli member call (1-64). */
+    harness_tool_concurrency?: number;
   }) => fetch('/api/config', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   }).then((r) => json<unknown>(r)),
