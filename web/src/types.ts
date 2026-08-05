@@ -213,6 +213,8 @@ export interface AskOptions {
   effort?: ReasoningEffort;
   /** Undefined = follow the council default; true/false explicitly overrides it. */
   webAccess?: boolean;
+  /** Skip the server's 15-minute repeat-ask cache and force a fresh run. */
+  noCache?: boolean;
 }
 
 export interface UserMessage {

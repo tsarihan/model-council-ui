@@ -294,6 +294,13 @@ export function Result({ result, question, askedAt, elapsedMs }: {
 
       {tab === 'result' && (
         <div className="result-body">
+          {'usage' in result && result.usage && (
+            <p className="usage-line">
+              Spent: {result.usage.completions} member completion{result.usage.completions === 1 ? '' : 's'} ·{' '}
+              {fmt(result.usage.totalLatencyMs)} member time
+              {result.usage.byMember[0] ? ` · slowest ${result.usage.byMember[0].label} ${fmt(result.usage.byMember[0].totalMs)}` : ''}
+            </p>
+          )}
           {body}
           {'webRouting' in result && result.webRouting?.sources && result.webRouting.sources.length > 0 && (
             <details className="raw-details">

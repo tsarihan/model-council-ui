@@ -23,6 +23,7 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
   const [effort, setEffort] = useState<ReasoningEffort | null>(null);
   // null = follow the council default; true/false is an explicit override.
   const [webAccess, setWebAccess] = useState<boolean | null>(null);
+  const [noCache, setNoCache] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -38,6 +39,7 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
       context: context.trim() || undefined,
       effort: effort ?? undefined,
       webAccess: webAccess ?? undefined,
+      noCache: noCache || undefined,
     });
     setQuestion('');
     setAttachments([]);
@@ -80,7 +82,7 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
           aria-expanded={optionsOpen}
           onClick={() => setOptionsOpen((v) => !v)}
         >
-          Options {verbose || background || context || effort || webAccess !== null ? '·' : ''}
+          Options {verbose || background || context || effort || webAccess !== null || noCache ? '·' : ''}
         </button>
       </div>
 
@@ -102,6 +104,10 @@ export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disable
             />
             Search the web — members research current facts instead of answering from
             training data{defaultWebAccess && webAccess === null ? ' (council default: on)' : ''}
+          </label>
+          <label className="opt">
+            <input type="checkbox" checked={noCache} onChange={(e) => setNoCache(e.target.checked)} />
+            Force fresh run — skip the 15-minute repeat-ask cache
           </label>
           <label className="opt opt-block">
             Reasoning effort — how hard every member and the judge think

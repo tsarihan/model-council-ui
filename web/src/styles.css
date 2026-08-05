@@ -433,3 +433,5 @@ h4.agree { color: var(--verdigris-deep); }
 .cite-count { color: var(--ink-faint); }
 
 .pill.cache { background: var(--agree-bg); border: 1px solid var(--line); color: var(--verdigris-deep); font-size: 11px; }
+
+.usage-line { margin: 0 0 10px; font-size: 12px; color: var(--ink-faint); font-family: var(--font-mono); }

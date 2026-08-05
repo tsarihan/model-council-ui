@@ -53,6 +53,7 @@ app.get('/api/models', passthrough('list_models', (req) =>
 app.put('/api/config', passthrough('configure_council', (req) => req.body));
 app.post('/api/setup', passthrough('setup_council', (req) => req.body));
 app.put('/api/timeouts', passthrough('set_council_timeouts', (req) => req.body));
+app.post('/api/estimate', passthrough('estimate_council_cost', (req) => req.body));
 app.post('/api/ask-async', passthrough('ask_council_async', (req) => req.body));
 app.get('/api/jobs', passthrough('get_council_result', () => ({ list: true })));
 app.get('/api/jobs/:id', passthrough('get_council_result', (req) => ({ job_id: req.params.id })));

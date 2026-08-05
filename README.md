@@ -7,6 +7,7 @@ A local web UI for [model-council-mcp](https://github.com/tsarihan/model-council
 - **The bench** — every council member gets a seat; seats light up live as each model answers.
 - **Documents in, documents out** — attach text files or images (vision-capable members are auto-routed); export any result as Markdown, copy it, or print it to PDF from the Document tab.
 - **Dial the reasoning depth** — set how hard every member and the judge think (`none` … `max`), per question in the composer's Options or as a council-wide default in the Council panel. A level a given backend can't take is clamped to its nearest supported one, so one setting works across a mixed council.
+- **Auditable, budgeted answers** — every result shows what it spent (member completions + wall-clock), researched runs get a consolidated cited-sources list ordered by corroboration, conflicts carry the judge's evidence-weighing when the sides differ in backing, the judge chip discloses when the judge also answered as a member, and a repeat-ask served from the server's 15-minute cache is labelled with its age (tick "Force fresh run" in Options to bypass it).
 - **Full council control** — members grouped by provider, judge model, default mode, default reasoning effort, deconfliction rounds, per-answer timeouts, and subscription tiers, all editable in the Council panel.
 - **Background runs** — long deconfliction runs can run as background jobs; the UI polls and fills in the answer when it's done, even after a page reload.
 

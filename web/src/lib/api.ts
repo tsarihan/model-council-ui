@@ -37,6 +37,12 @@ export const api = {
     return data.files;
   },
 
+  /** Price an ask before running it — free, no model calls (server ≥0.2.90). */
+  estimate: (body: { mode?: string; web_access?: boolean; max_deconflict_rounds?: number }) =>
+    fetch('/api/estimate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    }).then((r) => json<Record<string, unknown>>(r)),
+
   askAsync: (args: Record<string, unknown>) => fetch('/api/ask-async', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(args),
   }).then((r) => json<{ status: string; job_id: string }>(r)),
