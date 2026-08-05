@@ -186,6 +186,8 @@ export interface ConfigPayload {
     verbose: boolean;
     /** Parallel tool executions inside one claude-cli member call; null = unset (server seeds 16). */
     harnessToolConcurrency?: number | null;
+    /** Root for member scratch files; null = the server's OS temp directory. */
+    outputFileLocation?: string | null;
     [k: string]: unknown;
   };
 }

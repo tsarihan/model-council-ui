@@ -26,6 +26,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
   // reasoning). Keeping them distinct is why this can't just be a plain level.
   const [effort, setEffort] = useState<ReasoningEffort | ''>('');
   const [toolConc, setToolConc] = useState<number>(16);
+  const [fileLocation, setFileLocation] = useState('');
   const [runTimeoutS, setRunTimeoutS] = useState(300);
   const [tiers, setTiers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
@@ -39,6 +40,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
     setRounds(config.council.maxDeconflictRounds);
     setEffort(config.council.reasoningEffort ?? '');
     if (typeof config.runtime.harnessToolConcurrency === 'number') setToolConc(config.runtime.harnessToolConcurrency);
+    setFileLocation(typeof config.runtime.outputFileLocation === 'string' ? config.runtime.outputFileLocation : '');
   }, [config]);
   useEffect(() => {
     if (!status) return;
@@ -164,6 +166,19 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
             Parallel tool executions inside one Claude-CLI member (web fetches, repo reads). Overrides
             any throttle the member would inherit from your own session; seeded to 16 on install.
           </p>
+          <label className="field">
+            Member files location
+            <input
+              type="text"
+              placeholder="OS temp directory (default)"
+              value={fileLocation}
+              onChange={(e) => setFileLocation(e.target.value)}
+            />
+          </label>
+          <p className="panel-hint">
+            Absolute directory where members&apos; scratch files land on repo/web asks (collected as
+            member files). Leave empty to keep the current location; runs older than 7 days are swept.
+          </p>
           <button
             className="btn-primary"
             disabled={saving !== null}
@@ -171,6 +186,7 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
               judge_model: judge, response_mode: mode, max_deconflict_rounds: rounds,
               reasoning_effort: effort || 'auto',
               ...(Number.isFinite(toolConc) && toolConc >= 1 ? { harness_tool_concurrency: Math.min(64, Math.floor(toolConc)) } : {}),
+              ...(fileLocation.trim() ? { output_file_location: fileLocation.trim() } : {}),
             }))}
           >{saving === 'deliberation' ? 'Saving…' : 'Save deliberation'}</button>
         </section>

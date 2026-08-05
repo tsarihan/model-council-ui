@@ -19,6 +19,8 @@ export const api = {
     reasoning_effort?: string;
     /** Parallel tool executions inside one claude-cli member call (1-64). */
     harness_tool_concurrency?: number;
+    /** Absolute directory for member scratch files (default: the server's OS temp dir). */
+    output_file_location?: string;
   }) => fetch('/api/config', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
   }).then((r) => json<unknown>(r)),
