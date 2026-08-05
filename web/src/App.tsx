@@ -129,6 +129,8 @@ export default function App() {
     // the council's own configured default apply, which is not the same as any
     // particular level.
     if (opts.effort) args.reasoning_effort = opts.effort;
+    // Explicit false must reach the server so it can turn OFF a configured default.
+    if (opts.webAccess !== undefined) args.web_access = opts.webAccess;
     const files = attachments.filter((a) => a.kind === 'file').map((a) => a.path);
     const images = attachments.filter((a) => a.kind === 'image').map((a) => a.path);
     if (files.length) args.files = files;
@@ -197,6 +199,7 @@ export default function App() {
         <Composer
           defaultMode={config?.council.responseMode ?? 'categorized'}
           defaultEffort={config?.council.reasoningEffort ?? null}
+          defaultWebAccess={config?.council.webAccess ?? false}
           disabled={!!backendError}
           onAsk={ask}
         />

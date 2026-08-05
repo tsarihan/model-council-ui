@@ -152,6 +152,7 @@ export interface ConfigPayload {
     maxDeconflictRounds: number;
     /** null = unset, i.e. each model runs at its own default depth. */
     reasoningEffort: ReasoningEffort | null;
+    webAccess?: boolean;
   };
   providers: { id: string; type: string; label: string; baseUrl: string; hasApiKey: boolean }[];
   runtime: {
@@ -189,6 +190,8 @@ export interface AskOptions {
   context?: string;
   /** Undefined = don't send one, so the council's configured default applies. */
   effort?: ReasoningEffort;
+  /** Undefined = follow the council default; true/false explicitly overrides it. */
+  webAccess?: boolean;
 }
 
 export interface UserMessage {

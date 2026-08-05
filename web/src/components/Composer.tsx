@@ -2,10 +2,12 @@ import { useRef, useState } from 'react';
 import { api } from '../lib/api';
 import { EFFORTS, MODES, type AskOptions, type Attachment, type ReasoningEffort, type ResponseMode } from '../types';
 
-export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
+export function Composer({ defaultMode, defaultEffort, defaultWebAccess, disabled, onAsk }: {
   defaultMode: ResponseMode;
   /** The council's configured effort, or null when it runs at each model's own default. */
   defaultEffort: ReasoningEffort | null;
+  /** The council's configured web-access default, shown so the toggle isn't a mystery. */
+  defaultWebAccess: boolean;
   disabled: boolean;
   onAsk: (question: string, attachments: Attachment[], opts: AskOptions) => void;
 }) {
@@ -19,6 +21,8 @@ export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
   // the picker can offer the default explicitly rather than pretending the
   // configured value was picked here.
   const [effort, setEffort] = useState<ReasoningEffort | null>(null);
+  // null = follow the council default; true/false is an explicit override.
+  const [webAccess, setWebAccess] = useState<boolean | null>(null);
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -33,6 +37,7 @@ export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
       mode: effectiveMode, verbose, background,
       context: context.trim() || undefined,
       effort: effort ?? undefined,
+      webAccess: webAccess ?? undefined,
     });
     setQuestion('');
     setAttachments([]);
@@ -75,7 +80,7 @@ export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
           aria-expanded={optionsOpen}
           onClick={() => setOptionsOpen((v) => !v)}
         >
-          Options {verbose || background || context || effort ? '·' : ''}
+          Options {verbose || background || context || effort || webAccess !== null ? '·' : ''}
         </button>
       </div>
 
@@ -88,6 +93,15 @@ export function Composer({ defaultMode, defaultEffort, disabled, onAsk }: {
           <label className="opt">
             <input type="checkbox" checked={background} onChange={(e) => setBackground(e.target.checked)} />
             Run in background — get a job you can keep working past
+          </label>
+          <label className="opt">
+            <input
+              type="checkbox"
+              checked={webAccess ?? defaultWebAccess}
+              onChange={(e) => setWebAccess(e.target.checked)}
+            />
+            Search the web — members research current facts instead of answering from
+            training data{defaultWebAccess && webAccess === null ? ' (council default: on)' : ''}
           </label>
           <label className="opt opt-block">
             Reasoning effort — how hard every member and the judge think
