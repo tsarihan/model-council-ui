@@ -1,6 +1,6 @@
 {
   "name": "model-council-ui",
-  "version": "0.2.98",
+  "version": "0.2.99",
   "description": "Web UI for model-council-mcp \u2014 run multi-model council deliberations from a chat interface",
   "type": "module",
   "private": true,

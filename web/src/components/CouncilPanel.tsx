@@ -196,11 +196,14 @@ export function CouncilPanel({ status, config, models, onClose, onChanged }: {
           <label className="field">
             Per-answer timeout (seconds)
             <input
-              type="number" min={10} max={1800} value={runTimeoutS}
+              type="number" min={10} max={3600} value={runTimeoutS}
               onChange={(e) => setRunTimeoutS(Number(e.target.value))}
             />
           </label>
-          <p className="panel-hint">Raise this if slow local models get cut off mid-answer.</p>
+          <p className="panel-hint">
+            Raise this if slow local models get cut off mid-answer. Bounds ONE answer (max 60 min),
+            not the whole ask — a council run is members × rounds plus the judge, so it takes longer.
+          </p>
           <button
             className="btn-primary"
             disabled={saving !== null}
